@@ -1,0 +1,134 @@
+{
+    "@@locale": "ar",
+    "title": "ساعد المحتاجين",
+    "@title": {
+        "description": "title"
+    },
+    "add": "ضف",
+    "@add": {
+        "description": "add"
+    },
+    "locateMe": "حدد موقعي",
+    "@locateMe": {
+        "description": "locateMe"
+    },
+    "update": "حدث البيانات",
+    "@update": {
+        "description": "update"
+    },
+    "addNewPerson": "ضف شخص جديد",
+    "@addNewPerson": {
+        "description": "AddNewPerson"
+    },
+    "updatePerson": "حدث بيانات الشخص",
+    "@updatePerson": {
+        "description": "UpdatePerson"
+    },
+    "pickImage": "اختر صورة",
+    "@pickImage": {
+        "description": "PickImage"
+    },
+    "takePicture": "التقط صورة",
+    "@takePicture": {
+        "description": "PickImage"
+    },
+    "pleaseWaitLocation": "برجاء الانتظار ليتم تحديد موقعك",
+    "@pleaseWaitLocation": {
+        "description": "pleaseWaitLocation"
+    },
+    "locationFetchedSucc": "تم تحديد الموقع بنجاح",
+    "@locationFetchedSucc": {
+        "description": "locationFetchedSucc"
+    },
+    "checkLocation": "برجاء التأكد من خدمة الموقع",
+    "@checkLocation": {
+        "description": "locationFetchedSucc"
+    },
+    "locationPermission": "يرجى منح إذن الموقع للمتابعة",
+    "@locationPermission": {
+        "description": "locationPermission"
+    },
+    "enterAllData": "برجاء ادخال جميع البيانات بطريقة صحيحة",
+    "@enterAllData": {
+        "description": "locationPermission"
+    },
+    "submit": "قدم",
+    "@submit": {
+        "description": "locationPermission"
+    },
+    "save": "حفظ",
+    "@save": {
+        "description": "locationPermission"
+    },
+    "updateLocation": "حدث موقعك",
+    "@updateLocation": {
+        "description": "locationPermission"
+    },
+    "cannotFindPeople": "لا يمكن العثور على أشخاص لديهم الاحتياجات المحددة",
+    "@cannotFindPeople": {
+        "description": "لا يمكن العثور على أشخاص لديهم الاحتياجات المحددة"
+    },
+    "noHomelessPeople": "لا يوجد أشخاص بلا مأوى بالقرب منك حاليًا",
+    "@noHomelessPeople": {
+        "description": "لا يوجد أشخاص بلا مأوى بالقرب منك حاليًا"
+    },
+    "tryAgain": "حاول مرة أخرى",
+    "@tryAgain": {
+        "description": "حاول مرة أخرى"
+    },
+    "openLocation": "الموقع",
+    "@openLocation": {
+        "description": "الموقع"
+    },
+    "meter": "م",
+    "@meter": {
+        "description": "م"
+    },
+    "any": "اي مسافة",
+    "@any": {
+        "description": "اي مسافة"
+    },
+    "homelessAngels": "الاشخاص المحتاجين",
+    "@homelessAngels": {
+        "description": "اي مسافة"
+    },
+    "need": "احتياج",
+    "@need": {
+        "description": "Need"
+    },
+    "distance": "مسافة",
+    "@distance": {
+        "description": "Distance"
+    },
+
+    
+    "food": "طعام",
+    "@food": {
+        "description": "food"
+    },
+    "shelter": "مأوي",
+    "@shelter": {
+        "description": "shelter"
+    },
+    "water": "مياه",
+    "@water": {
+        "description": "water"
+    },
+    "clothes": "ملابس",
+    "@clothes": {
+        "description": "clothes"
+    },
+    "blanket": "غطاء",
+    "@blanket": {
+        "description": "blanket"
+    },
+    "financial": "مساعدة مادية",
+    "@financial": {
+        "description": "financial"
+    },
+    "medical": "مساعدة طبية",
+    "@medical": {
+        "description": "medical"
+    }
+
+}

@@ -1,0 +1,134 @@
+{
+    "@@locale": "en",
+    "title": "Help homeless",
+    "@title": {
+        "description": "title"
+    },
+    "add": "Add",
+    "@add": {
+        "description": "add"
+    },
+    "locateMe": "Locate Me",
+    "@locateMe": {
+        "description": "locateMe"
+    },
+    "update": "Update Data",
+    "@update": {
+        "description": "update"
+    },
+    "addNewPerson": "Add a New Person",
+    "@addNewPerson": {
+        "description": "addNewPerson"
+    },
+    "updatePerson": "Update Person's Data",
+    "@updatePerson": {
+        "description": "updatePerson"
+    },
+    "pickImage": "Pick an Image",
+    "@pickImage": {
+        "description": "pickImage"
+    },
+    "takePicture": "Take a Picture",
+    "@takePicture": {
+        "description": "takePicture"
+    },
+    "pleaseWaitLocation": "Please wait while your location is determined",
+    "@pleaseWaitLocation": {
+        "description": "pleaseWaitLocation"
+    },
+    "locationFetchedSucc": "Location determined successfully",
+    "@locationFetchedSucc": {
+        "description": "locationFetchedSucc"
+    },
+    "checkLocation": "Please ensure location services are enabled",
+    "@checkLocation": {
+        "description": "checkLocation"
+    },
+    "locationPermission": "Please grant location permission to proceed",
+    "@locationPermission": {
+        "description": "locationPermission"
+    },
+    "enterAllData": "Please enter all data correctly",
+    "@enterAllData": {
+        "description": "enterAllData"
+    },
+    "submit": "Submit",
+    "@submit": {
+        "description": "submit"
+    },
+    "save": "Save",
+    "@save": {
+        "description": "save"
+    },
+    "updateLocation": "Update Your Location",
+    "@updateLocation": {
+        "description": "updateLocation"
+    },
+    "cannotFindPeople": "cannot find people with specified needs",
+    "@cannotFindPeople": {
+        "description": "cannot find people with specified needs"
+    },
+    "noHomelessPeople": "No Homeless people around you right now",
+    "@noHomelessPeople": {
+        "description": "No Homeless people around you right now"
+    },
+    "tryAgain": "Try again",
+    "@tryAgain": {
+        "description": "Try again"
+    },
+    "openLocation": "Open Location",
+    "@openLocation": {
+        "description": "open location"
+    },
+    "meter": "m",
+    "@meter": {
+        "description": "m"
+    },
+        "any": "Any",
+    "@any": {
+        "description": "any"
+    },
+    "homelessAngels": "Homeless Angels",
+    "@homelessAngels": {
+        "description": "Homeless Angels"
+    },
+    "need": "Need",
+    "@need": {
+        "description": "Need"
+    },
+    "distance": "Distance",
+    "@distance": {
+        "description": "Distance"
+    },
+    
+    
+    
+    "food": "Food",
+    "@food": {
+        "description": "food"
+    },
+    "shelter": "Shelter",
+    "@shelter": {
+        "description": "shelter"
+    },
+    "water": "Water",
+    "@water": {
+        "description": "water"
+    },
+    "clothes": "Clothes",
+    "@clothes": {
+        "description": "clothes"
+    },
+    "blanket": "Blanket",
+    "@blanket": {
+        "description": "blanket"
+    },
+    "financial": "Financial",
+    "@financial": {
+        "description": "financial"
+    },
+    "medical": "Medical Care",
+    "@medical": {
+        "description": "medical"
+    }
+}
