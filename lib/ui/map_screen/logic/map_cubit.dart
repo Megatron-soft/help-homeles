@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shelter/helper/helper.dart';
 import 'package:shelter/ui/map_screen/data/models/get_map_workshops_response.dart';
 
 
@@ -72,13 +73,20 @@ class MapCubit extends Cubit<MapState> {
     emit(MapLoading());  // Emit loading state
     try {
       print('Starting request to fetch workshops...');
-
+      Options options = Options(
+        headers: {
+          'Content-Type': '',
+          'Accept': 'application/json',
+          "X-Localization":CacheHelper.getData(key: "lang")=="ar"?"en":"ar"
+        },
+      );
       final response = await _dio.get(
-        'https://test.ysk-comics.com/api/v1/filter/homelesses',  // Ensure correct URL
+        'https://shelter.megatron-soft.com/api/v1/filter/homelesses',  // Ensure correct URL
         queryParameters: {
           'latitude': latitude,  // Use function parameters correctly
           'longitude': longitude,
         },
+        options: options,
       );
 
       print('Response received: ${response.statusCode}');

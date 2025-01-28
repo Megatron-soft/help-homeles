@@ -30,7 +30,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   SvgPicture.asset("lib/res/person.svg"),
                   SizedBox(width: 8.w),
                   Text(
-                    "About Us",
+                    CacheHelper.getData(key: "lang")=="ar"? "About Us":"نبذه عنا",
                     style: TextStyle(color: Colors.black),
                   ),
                 ],
@@ -68,7 +68,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               CacheHelper.getData(key: "lang");
                             },
                             child: Text(
-                              state == "en" ? "عربي" : "english",
+                              state == "en" ? "عربي" : "English",
                               style: TextStyle(color: Colors.black),
                             ));
                       },

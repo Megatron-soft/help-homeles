@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shelter/helper/helper.dart';
 import 'package:shelter/ui/map_screen/logic/map_cubit.dart';
 import 'package:shelter/ui/map_screen/presentation/screen/map_screen.dart';
 
@@ -53,6 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // Define the duration for which the splash screen should be displayed
 
     Future.delayed(const Duration(seconds: 3), () {
+      CacheHelper.saveData(key: "lang",value: "ar");
       Navigator.push(
         context,
         MaterialPageRoute(

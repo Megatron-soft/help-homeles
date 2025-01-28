@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:shelter/helper/helper.dart';
 import 'package:shelter/ui/show_user_data/data/model/show_data_response.dart';
 
 part 'get_data_state.dart';
@@ -14,8 +15,14 @@ class GetDataCubit extends Cubit<GetDataState> {
     emit(HomelessLoading());
     try {
       print('Fetching data for homeless ID: $id...');
-
-      final response = await _dio.get('https://test.ysk-comics.com/api/v1/homelesses/$id');
+      Options options = Options(
+        headers: {
+          'Content-Type': '',
+          'Accept': 'application/json',
+          "X-Localization":CacheHelper.getData(key: "lang")=="ar"?"en":"ar"
+        },
+      );
+      final response = await _dio.get('https://shelter.megatron-soft.com/api/v1/homelesses/$id',options: options);
 
       print('Response received: ${response.statusCode}');
       print('Response data: ${response.data}');

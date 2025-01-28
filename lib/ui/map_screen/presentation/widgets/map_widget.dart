@@ -108,7 +108,7 @@ class MapWidget extends StatelessWidget {
     List<Marker> markerList = [];
     for (var entry in cars.asMap().entries) {
       final markerId = 'car_${entry.key}';
-      final imageUrl = entry.value.workShopImage; // Use the URL directly
+      final imageUrl = entry.value.image; // Use the URL directly
 
       final icon = await _getCarIcon(imageUrl); // Fetch the icon dynamically
 

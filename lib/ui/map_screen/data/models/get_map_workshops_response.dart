@@ -30,6 +30,7 @@ class GetMapWorkshopsResponse {
 class Data {
   int? id;
   String? latitude;
+  String? image;
   String? longitude;
   List<Categories>? categories;
   String? address;
@@ -39,6 +40,7 @@ class Data {
       {this.id,
         this.latitude,
         this.longitude,
+        this.image,
         this.categories,
         this.address,
         this.distance});
@@ -46,6 +48,7 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     latitude = json['latitude'];
+    image = json['image'];
     longitude = json['longitude'];
     if (json['categories'] != null) {
       categories = <Categories>[];
@@ -61,6 +64,7 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['latitude'] = this.latitude;
+    data['image'] = this.image;
     data['longitude'] = this.longitude;
     if (this.categories != null) {
       data['categories'] = this.categories!.map((v) => v.toJson()).toList();

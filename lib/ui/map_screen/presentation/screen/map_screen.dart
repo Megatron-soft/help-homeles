@@ -33,6 +33,7 @@ class MarkerModel {
   final int id;
 
   final String address;
+  final String image;
 
   final String workShopImage;
   final List<Categories> categories;
@@ -42,6 +43,7 @@ class MarkerModel {
   MarkerModel({
     required this.id,
     required this.address,
+    required this.image,
     required this.workShopImage,
     required this.categories,
     required this.distance,
@@ -261,6 +263,7 @@ class _MapScreenState extends State<MapScreen> {
                           .map(
                             (e) => MarkerModel(
                               id: e.id!,
+                              image: e.image!,
                               workShopImage: "lib/res/marker.png",
                               categories: e.categories!,
                               address: e.address!,
@@ -380,9 +383,16 @@ class _MapScreenState extends State<MapScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // WorkshopPreviewImage(imagePath: "",),
-              Text(
-                location.address,
-                style: TextStyle(color: Colors.black, fontSize: 20.sp),
+              Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    CacheHelper.getData(key: "lang")=="ar"? "address: ":"العنوان: ",
+                    style: TextStyle(color: Colors.black, fontSize: 20.sp),
+                  ),  Text(
+                    location.address,
+                    style: TextStyle(color: Colors.black, fontSize: 20.sp),
+                  ),
+                ],
               ),
               SizedBox(
                 height: 10.h,
@@ -415,7 +425,7 @@ class _MapScreenState extends State<MapScreen> {
                 itemCount: location.categories.length,
               ),
               Text(
-                "distance: ${location.distance.toInt()} K",
+                CacheHelper.getData(key: "lang")=="ar"? "distance: ${location.distance.toInt()} K":"المسافه: ${location.distance.toInt()} كيلو",
                 style: TextStyle(color: Colors.black, fontSize: 20.sp),
               ),
             ],

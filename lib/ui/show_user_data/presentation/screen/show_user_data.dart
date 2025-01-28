@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shelter/helper/helper.dart';
 import 'package:shelter/ui/show_user_data/data/logic/get_data_cubit.dart';
 import 'package:shelter/ui/widgets/layout_widget.dart';
 
@@ -39,7 +40,7 @@ class _ShowUserDataState extends State<ShowUserData> {
           return AuthLayout(children: [
             Center(
               child: Text(
-                "User Need",
+                CacheHelper.getData(key: "lang")=="ar"?  "User Need":"الاحتياجات الشخصيه",
                 style: TextStyle(color: Colors.black, fontSize: 30.sp),
               ),
             ),
@@ -53,7 +54,7 @@ class _ShowUserDataState extends State<ShowUserData> {
               height: 10.h,
             ),
             Text(
-              "Need",
+              CacheHelper.getData(key: "lang")=="ar"?  "Need":"الاحتياجات",
               style: TextStyle(color: Colors.black, fontSize: 30.sp),
             ),
             Divider(),
@@ -91,7 +92,7 @@ class _ShowUserDataState extends State<ShowUserData> {
             ),
             Divider(),
             Text(
-              "address:${widget.data!.address.toString()}",
+              CacheHelper.getData(key: "lang")=="ar"? "address:${widget.data!.address.toString()}":"العنوان:${widget.data!.address.toString()}",
               style: TextStyle(color: Colors.black, fontSize: 20.sp),
             ),
             SizedBox(
@@ -99,7 +100,7 @@ class _ShowUserDataState extends State<ShowUserData> {
             ),
             Divider(),
             Text(
-              "note:${widget.data!.note==null?"":widget.data!.note}",
+              CacheHelper.getData(key: "lang")=="ar"?  "note:${widget.data!.note==null?"":widget.data!.note}":"ملاحظات:${widget.data!.note==null?"":widget.data!.note}",
               style: TextStyle(color: Colors.black, fontSize: 20.sp),
             ),
             Divider(),

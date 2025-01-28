@@ -71,7 +71,7 @@ class AddCardCubit extends Cubit<AddCardState> {
       );
 
       final response = await Dio().post(
-        'https://test.ysk-comics.com/api/v1/homelesses',
+        'https://shelter.megatron-soft.com/api/v1/homelesses',
         data: formData,
         options: options,
       );

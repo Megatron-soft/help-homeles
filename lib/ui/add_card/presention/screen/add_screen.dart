@@ -43,6 +43,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
 // Store selected category IDs to send to the API
   List<int> selectedIds = [];
+
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -59,13 +60,13 @@ class _AddCardScreenState extends State<AddCardScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    AddCardCubit().fetchCategories('https://test.ysk-comics.com/api/v1');
-  print(CacheHelper.getData(key: "lang"))  ;
-  print(CacheHelper.getData(key: "lang"))  ;
-  print(CacheHelper.getData(key: "lang"))  ;
-  print(CacheHelper.getData(key: "lang"))  ;
-  print(CacheHelper.getData(key: "lang"))  ;
-  print(CacheHelper.getData(key: "lang"))  ;
+    AddCardCubit().fetchCategories('https://shelter.megatron-soft.com/api/v1');
+    print(CacheHelper.getData(key: "lang"));
+    print(CacheHelper.getData(key: "lang"));
+    print(CacheHelper.getData(key: "lang"));
+    print(CacheHelper.getData(key: "lang"));
+    print(CacheHelper.getData(key: "lang"));
+    print(CacheHelper.getData(key: "lang"));
     CacheHelper.getData(key: "lang");
     CacheHelper.getData(key: "lang");
     CacheHelper.getData(key: "lang");
@@ -80,8 +81,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
     return BlocProvider(
       create: (context) =>
-      AddCardCubit()
-        ..fetchCategories('https://test.ysk-comics.com/api/v1'),
+          AddCardCubit()..fetchCategories('https://shelter.megatron-soft.com/api/v1'),
       child: AuthLayout(
         children: [
           // Padding(
@@ -105,28 +105,28 @@ class _AddCardScreenState extends State<AddCardScreen> {
             },
             child: selectedLogo == null
                 ? Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    "lib/res/upload.svg",
-                    width: 80,
-                    height: 40,
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    AppLocalizations.of(context)!.pickImage,
-                  ),
-                ],
-              ),
-            )
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "lib/res/upload.svg",
+                          width: 80,
+                          height: 40,
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          AppLocalizations.of(context)!.pickImage,
+                        ),
+                      ],
+                    ),
+                  )
                 : Image.file(
-              selectedLogo!,
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
+                    selectedLogo!,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
           ),
 
           const SizedBox(
@@ -141,14 +141,19 @@ class _AddCardScreenState extends State<AddCardScreen> {
             },
             builder: (context, state) {
               return CustomMultiSelectDropdownField<String>(
-                label: CacheHelper.getData(key: "lang")=="ar"?"list of needed":"قاثمه الاحتياجات",
-                hintText: CacheHelper.getData(key: "lang")=="ar"?"list of needed":"قاثمه الاحتياجات",
-                selectedValues: selectedNames,  // Display category names in the UI
+                label: CacheHelper.getData(key: "lang") == "ar"
+                    ? "list of needed"
+                    : "قاثمه الاحتياجات",
+                hintText: CacheHelper.getData(key: "lang") == "ar"
+                    ? "list of needed"
+                    : "قاثمه الاحتياجات",
+                selectedValues: selectedNames,
+                // Display category names in the UI
                 items: data.isNotEmpty
                     ? data
-                    .map((category) => category.name ?? '')
-                    .where((element) => element.isNotEmpty)
-                    .toList()
+                        .map((category) => category.name ?? '')
+                        .where((element) => element.isNotEmpty)
+                        .toList()
                     : [],
                 onChanged: (selectedItems) {
                   // Update selected names list for display
@@ -156,8 +161,13 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
                   // Safely map selected names to their corresponding IDs
                   selectedIds = selectedItems
-                      .map((selectedName) => data.firstWhere((cat) => cat.name == selectedName).id ?? 0)  // Use ?? 0 to handle null cases
-                      .where((id) => id != 0)  // Ensure no default values are included
+                      .map((selectedName) =>
+                          data
+                              .firstWhere((cat) => cat.name == selectedName)
+                              .id ??
+                          0) // Use ?? 0 to handle null cases
+                      .where((id) =>
+                          id != 0) // Ensure no default values are included
                       .toList();
 
                   print("Selected names: $selectedNames");
@@ -179,7 +189,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
               if (permissionStatus.isGranted) {
                 // Fetch the location
                 GeolocatorResponse geoResponse =
-                await LocationHelper.determinePosition();
+                    await LocationHelper.determinePosition();
                 Helper.showToast(
                     AppLocalizations.of(context)!.pleaseWaitLocation);
 
@@ -206,7 +216,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   Helper.showToast(
                       AppLocalizations.of(context)!.pleaseWaitLocation);
                   GeolocatorResponse geoResponse =
-                  await LocationHelper.determinePosition();
+                      await LocationHelper.determinePosition();
 
                   if (geoResponse.isSuccess) {
                     lat = geoResponse.lat;
@@ -238,29 +248,39 @@ class _AddCardScreenState extends State<AddCardScreen> {
           const SizedBox(height: 40),
 
           CustomTextFormFieldWithLabel(
-            label:CacheHelper.getData(key: "lang")=="ar"? "Other Data":"اضافه بيانات اخري",
-            hintText: CacheHelper.getData(key: "lang")=="ar"?" Enter Other Data":"اضافه بيانات اخري",
+            label: CacheHelper.getData(key: "lang") == "ar"
+                ? "Other Data"
+                : "اضافه بيانات اخري",
+            hintText: CacheHelper.getData(key: "lang") == "ar"
+                ? " Enter Other Data"
+                : "اضافه بيانات اخري",
             controller: addDataController,
           ),
 
           const SizedBox(height: 40),
 
           CustomTextFormFieldWithLabel(
-            label:CacheHelper.getData(key: "lang")=="ar"? "Address":"العنوان",
-            hintText: CacheHelper.getData(key: "lang")=="ar"? "enter Address":" ادخل العنوان",
+            label: CacheHelper.getData(key: "lang") == "ar"
+                ? "Address"
+                : "العنوان",
+            hintText: CacheHelper.getData(key: "lang") == "ar"
+                ? "enter Address"
+                : " ادخل العنوان",
             controller: addressController,
           ),
           const SizedBox(height: 40),
           BlocConsumer<AddCardCubit, AddCardState>(
             listener: (context, state) {
-              if(state is AddCardError)
-                {
-                  Helper.showToast(AppLocalizations.of(context)!.enterAllData);
-                }
-              if(state is AddCardSuccess)
-                {
-                  Helper.showToast(CacheHelper.getData(key: "lang")=="ar"?"The data has been added successfully wait until it is approved":"تم اضافه البيانات بنجاج انتظر حتي يم الموافقه عليها");
-                }
+              if (state is AddCardError) {
+                Helper.showToast(AppLocalizations.of(context)!.enterAllData);
+              }
+              if (state is AddCardSuccess) {
+                Helper.showToast(CacheHelper.getData(key: "lang") == "ar"
+                        ? "The data has been added successfully wait until it is approved"
+                        : "تم اضافه البيانات بنجاج انتظر حتي يم الموافقه عليها")
+                    ;
+                Navigator.pop(context);
+              }
               // TODO: implement listener
             },
             builder: (context, state) {
@@ -272,7 +292,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                     return;
                   }
 
-                  if ( selectedLogo == null) {
+                  if (selectedLogo == null) {
                     Helper.showToast(AppLocalizations.of(context)!.takePicture);
                     return;
                   }
@@ -294,8 +314,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                       longitude: long,
                       categories: selectedIds,
                       note: addDataController.text.trim(),
-                  address: addressController.text.trim()
-                  );
+                      address: addressController.text.trim());
 
                   // blocContext.read<HomelessCubit>().addPerson(cardData,
                   //     imageFileNotifier.value, imagePathNotifier.value);
