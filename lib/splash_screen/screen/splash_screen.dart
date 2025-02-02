@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:shelter/helper/helper.dart';
 import 'package:shelter/ui/map_screen/logic/map_cubit.dart';
 import 'package:shelter/ui/map_screen/presentation/screen/map_screen.dart';
+import 'package:shelter/ui/search_results/ui/screen/search_results_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -42,8 +43,10 @@ class _SplashScreenState extends State<SplashScreen> {
     // Get current position
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
-    );
 
+    );
+    CacheHelper.saveData(key: "latitude", value: position.latitude.toString());
+    CacheHelper.saveData(key: "longitude", value: position.longitude.toString());
     return position;
   }
 
@@ -55,20 +58,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(const Duration(seconds: 3), () {
       CacheHelper.saveData(key: "lang",value: "ar");
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BlocProvider.value(
-            value: context.read<
-                MapCubit>(), // Use value if the cubit is already created
-            child: MapScreen(
-              isVisible: true,
+      _getCurrentLocation().then((_){
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider.value(
+              value: context.read<MapCubit>(), // Keep existing MapCubit instance
+              child: SearchResultsScreen(),
             ),
           ),
-        ),
-      ).then((_){
-        _getCurrentLocation();
+              (route) => false, // Remove all previous routes from the stack
+        );
+
       });
+
     });
   }
 

@@ -27,7 +27,7 @@ class Data {
   String? latitude;
   String? longitude;
   List<Categories>? categories;
-  String? address;
+  String? country;
   String? note;
   String? image;
 
@@ -36,7 +36,7 @@ class Data {
         this.latitude,
         this.longitude,
         this.categories,
-        this.address,
+        this.country,
         this.note,
         this.image});
 
@@ -50,7 +50,7 @@ class Data {
         categories!.add(new Categories.fromJson(v));
       });
     }
-    address = json['address'];
+    country = json['country'];
     note = json['note'];
     image = json['image'];
   }
@@ -63,7 +63,7 @@ class Data {
     if (this.categories != null) {
       data['categories'] = this.categories!.map((v) => v.toJson()).toList();
     }
-    data['address'] = this.address;
+    data['country'] = this.country;
     data['note'] = this.note;
     data['image'] = this.image;
     return data;

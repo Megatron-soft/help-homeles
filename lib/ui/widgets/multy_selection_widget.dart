@@ -1,4 +1,138 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
+class CustomMultiSelectDropdownField2<T> extends StatefulWidget {
+  final String label;
+  final String hintText;
+  final List<T> selectedValues;
+  final bool? isMandatory;
+  final List<T> items;
+  final ValueChanged<List<T>> onChanged;
+
+  const CustomMultiSelectDropdownField2({
+    Key? key,
+    required this.label,
+    required this.hintText,
+    required this.selectedValues,
+    this.isMandatory,
+    required this.items,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  _CustomMultiSelectDropdownField2State<T> createState() =>
+      _CustomMultiSelectDropdownField2State<T>();
+}
+
+class _CustomMultiSelectDropdownField2State<T>
+    extends State<CustomMultiSelectDropdownField2<T>> {
+  bool isDropdownOpen = false; // Track dropdown state
+  late List<T> selectedItems; // Maintain local state for selected values
+
+  @override
+  void initState() {
+    super.initState();
+    selectedItems = List.from(widget.selectedValues);
+  }
+
+  void _toggleDropdown() {
+    setState(() {
+      isDropdownOpen = !isDropdownOpen;
+    });
+  }
+
+  void _onItemChecked(bool? checked, T item) {
+    setState(() {
+      if (checked == true) {
+        selectedItems.add(item);
+      } else {
+        selectedItems.remove(item);
+      }
+      widget.onChanged(selectedItems); // Call callback with updated values
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.label.isNotEmpty)
+          Row(
+            children: [
+              Text(widget.label, style: TextStyle(color: Colors.black)),
+              if (widget.isMandatory == true)
+                Text(
+                  "*",
+                  style: TextStyle(
+                    color: Color(0xFFDC2626),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+            ],
+          ),
+        SizedBox(height: 5),
+        GestureDetector(
+          onTap: _toggleDropdown,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            decoration: BoxDecoration(
+              color: Color(0xFFF9FAFB),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    selectedItems.isEmpty
+                        ? widget.hintText
+                        : selectedItems.map((e) => e.toString()).join(", "),
+                    style: TextStyle(fontSize: 16),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Icon(isDropdownOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+              ],
+            ),
+          ),
+        ),
+        if (isDropdownOpen)
+          Container(
+            margin: EdgeInsets.only(top: 5),
+            padding: EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            constraints: BoxConstraints(maxHeight: 250), // Limit dropdown height
+            child: SingleChildScrollView(
+              child: Column(
+                children: widget.items.map((item) {
+                  bool isSelected = selectedItems.contains(item);
+                  return CheckboxListTile(
+                    value: isSelected,
+                    title: Text(item.toString()),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (bool? checked) => _onItemChecked(checked, item),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
 
 class CustomMultiSelectDropdownField<T> extends StatefulWidget {
   final String label;

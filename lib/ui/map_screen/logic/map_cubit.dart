@@ -69,6 +69,9 @@ class MapCubit extends Cubit<MapState> {
   Future<void> fetchWorkshops({
     required double latitude,
     required double longitude,
+     dynamic radius,
+     dynamic categories,
+     dynamic country,
   }) async {
     emit(MapLoading());  // Emit loading state
     try {
@@ -83,12 +86,21 @@ class MapCubit extends Cubit<MapState> {
       final response = await _dio.get(
         'https://shelter.megatron-soft.com/api/v1/filter/homelesses',  // Ensure correct URL
         queryParameters: {
-          'latitude': latitude,  // Use function parameters correctly
-          'longitude': longitude,
+
+
+            'latitude': latitude,  // Use function parameters correctly
+            'longitude': longitude,
+
+          if (radius != null) 'radius': radius,
+          if (categories != null) 'categories': categories,
+          if (country != null) 'country': country,
+
         },
         options: options,
       );
-
+print(
+  'https://shelter.megatron-soft.com/api/v1/filter/homelesses? latitude=${latitude},longitude= ${longitude},radius= ${radius}, country=${country}, categories= ${categories}',  // Ensure correct URL
+);
       print('Response received: ${response.statusCode}');
       print('Response data: ${response.data}');
 

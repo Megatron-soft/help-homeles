@@ -61,38 +61,40 @@ class _ShowUserDataState extends State<ShowUserData> {
             SizedBox(
               height: 10.h,
             ),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              separatorBuilder: (context, index) => SizedBox(
-                height: 5.h,
-              ),
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    Container(
-                      width: 10.w,
-                      height: 10.h,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        shape: BoxShape.circle,
+            Wrap(
+              spacing: 10.w, // Space between items
+              runSpacing: 5.h, // Space between rows
+              children: List.generate(
+                widget.data!.categories!.length,
+                    (index1) => Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius:
+                    BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        widget.data!.categories![index1].name!,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.sp,
+                        ),
                       ),
-                    ),
-                    Text(
-                      widget.data!.categories![index].name!,
-                      style: TextStyle(color: Colors.black, fontSize: 20.sp),
-                    ),
-                  ],
-                );
-              },
-              itemCount: widget.data!.categories!.length,
+                    ],
+                  ),
+                ),
+              ),
             ),
             SizedBox(
               height: 10.h,
             ),
             Divider(),
             Text(
-              CacheHelper.getData(key: "lang")=="ar"? "address:${widget.data!.address.toString()}":"العنوان:${widget.data!.address.toString()}",
+              CacheHelper.getData(key: "lang")=="ar"? "country:${widget.data!.country.toString()}":"الدوله:${widget.data!.country.toString()}",
               style: TextStyle(color: Colors.black, fontSize: 20.sp),
             ),
             SizedBox(

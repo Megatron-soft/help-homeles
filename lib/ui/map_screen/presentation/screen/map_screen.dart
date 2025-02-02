@@ -10,6 +10,8 @@ import 'package:shelter/helper/helper.dart';
 import 'package:shelter/ui/add_card/presention/screen/add_screen.dart';
 import 'package:shelter/ui/bloc/homeless_bloc.dart';
 import 'package:shelter/ui/map_screen/data/models/get_map_workshops_response.dart';
+import 'package:shelter/ui/search/presntation/screen/search_screen.dart';
+import 'package:shelter/ui/search_results/ui/screen/search_results_screen.dart';
 import 'package:shelter/ui/show_user_data/presentation/screen/show_user_data.dart';
 import 'package:shelter/ui/widgets/drower.dart';
 import 'package:shelter/ui/widgets/image_prev.dart';
@@ -142,9 +144,13 @@ class _MapScreenState extends State<MapScreen> {
               20) {
         // Update the last known location
         _lastLocation = currentLocation;
+        CacheHelper.saveData(key: "latitude", value: currentLocation.latitude.toString());
+        CacheHelper.saveData(key: "longitude", value: currentLocation.longitude.toString());
         MapCubit.get(context).fetchWorkshops(
           latitude: double.parse(currentLocation.latitude.toString()),
           // "latitude": "29.9792",
+          country: "",
+          radius: 1,
           longitude: double.parse(currentLocation.longitude.toString()),
           // "longitude": "31.2357",
         );
@@ -252,6 +258,8 @@ class _MapScreenState extends State<MapScreen> {
                   if (state is ChangeLocationMapState) {
                     MapCubit.get(context).fetchWorkshops(
                       latitude: double.parse(state.latLng.latitude.toString()),
+                      country: "",
+                      radius: 1,
                       // "latitude": "29.9792",
                       longitude: double.parse(state.latLng.longitude.toString()),
                       // "longitude": "31.2357",
@@ -266,8 +274,8 @@ class _MapScreenState extends State<MapScreen> {
                               image: e.image!,
                               workShopImage: "lib/res/marker.png",
                               categories: e.categories!,
-                              address: e.address!,
-                              distance: double.parse(e.distance.toString()),
+                              address: "1",
+                              distance: double.parse(''),
                               location: LatLng(double.parse(e.latitude!),
                                   double.parse(e.longitude!)),
                             ),
@@ -313,26 +321,52 @@ class _MapScreenState extends State<MapScreen> {
                       Positioned(
                         bottom: 20,
                         left: 20,
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddCardScreen(),
+                        child: Column(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SearchResultsScreen(),
+                                  ),
+                                );
+                              },
+                              icon: Container(
+                                width: 50,  // Set width and height equally to create a circle
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  shape: BoxShape.circle,  // Make the container circular
+                                ),
+                                child: Center(
+                                  child: Icon(Icons.search, color: Colors.red, size: 30),
+                                ),
                               ),
-                            );
-                          },
-                          icon: Container(
-                            width: 50,  // Set width and height equally to create a circle
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              shape: BoxShape.circle,  // Make the container circular
                             ),
-                            child: Center(
-                              child: Icon(Icons.add, color: Colors.red, size: 30),
+                            SizedBox(height: 5.h,),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddCardScreen(),
+                                  ),
+                                );
+                              },
+                              icon: Container(
+                                width: 50,  // Set width and height equally to create a circle
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  shape: BoxShape.circle,  // Make the container circular
+                                ),
+                                child: Center(
+                                  child: Icon(Icons.add, color: Colors.red, size: 30),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ],
@@ -397,32 +431,31 @@ class _MapScreenState extends State<MapScreen> {
               SizedBox(
                 height: 10.h,
               ),
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                separatorBuilder: (context, index) => SizedBox(
-                  height: 5.h,
-                ),
-                itemBuilder: (context, index) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 10.w,
-                        height: 10.h,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          shape: BoxShape.circle,
+              Wrap(
+                spacing: 10.w, // Space between items
+                runSpacing: 5.h, // Space between rows
+                children: List.generate(
+                  location.categories.length,
+                      (index1) => Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          location.categories[index1].name.toString(), // Accessing the category name by index
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16.sp,
+                          ),
                         ),
-                      ),
-                      Text(
-                        location.categories[index].name,
-                        style: TextStyle(color: Colors.black, fontSize: 20.sp),
-                      ),
-                    ],
-                  );
-                },
-                itemCount: location.categories.length,
+                      ],
+                    ),
+                  ),
+                ),
               ),
               Text(
                 CacheHelper.getData(key: "lang")=="ar"? "distance: ${location.distance.toInt()} K":"المسافه: ${location.distance.toInt()} كيلو",

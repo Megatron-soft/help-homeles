@@ -43,7 +43,7 @@ class AddCardCubit extends Cubit<AddCardState> {
     required File imagePath,
     required double latitude,
     required double longitude,
-    required String address,
+    required String country,
     required String note,
     required List<int> categories,
   }) async {
@@ -57,7 +57,7 @@ class AddCardCubit extends Cubit<AddCardState> {
         ),
         'latitude': latitude.toString(),
         'longitude': longitude.toString(),
-        'address': address.trim(),
+        'country': country.toString(),
         'note': note.trim(),
         'categories[]': categories.isNotEmpty ? categories : null,
       });
@@ -66,7 +66,7 @@ class AddCardCubit extends Cubit<AddCardState> {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Accept': 'application/json',
-          "X-Localization":CacheHelper.getData(key: "lang")
+          "X-Localization":CacheHelper.getData(key: "lang")=="ar"?"en":"ar"
         },
       );
 

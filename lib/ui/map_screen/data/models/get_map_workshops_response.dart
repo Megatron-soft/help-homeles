@@ -29,55 +29,51 @@ class GetMapWorkshopsResponse {
 
 class Data {
   int? id;
-  String? latitude;
   String? image;
-  String? longitude;
   List<Categories>? categories;
-  String? address;
-  double? distance;
+  String? country;
+  String? latitude;
+  String? longitude;
 
   Data(
       {this.id,
-        this.latitude,
-        this.longitude,
         this.image,
         this.categories,
-        this.address,
-        this.distance});
+        this.country,
+        this.latitude,
+        this.longitude});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    latitude = json['latitude'];
     image = json['image'];
-    longitude = json['longitude'];
     if (json['categories'] != null) {
       categories = <Categories>[];
       json['categories'].forEach((v) {
         categories!.add(new Categories.fromJson(v));
       });
     }
-    address = json['address'];
-    distance = json['distance'];
+    country = json['country'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['latitude'] = this.latitude;
     data['image'] = this.image;
-    data['longitude'] = this.longitude;
     if (this.categories != null) {
       data['categories'] = this.categories!.map((v) => v.toJson()).toList();
     }
-    data['address'] = this.address;
-    data['distance'] = this.distance;
+    data['country'] = this.country;
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
     return data;
   }
 }
 
 class Categories {
   int? id;
-  dynamic name;
+  String? name;
 
   Categories({this.id, this.name});
 

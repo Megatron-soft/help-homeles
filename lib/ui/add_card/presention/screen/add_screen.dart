@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shelter/helper/helper.dart';
@@ -19,9 +20,11 @@ import 'package:shelter/ui/bloc/needs_bloc.dart';
 import 'package:shelter/ui/camera.dart';
 import 'package:shelter/ui/helpers/helper.dart';
 import 'package:shelter/ui/widgets/multy_selection_widget.dart';
+import 'package:shelter/ui/widgets/needs_button.dart';
 import 'package:shelter/ui/widgets/needs_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 import '../../../widgets/layout_widget.dart';
 
 class AddCardScreen extends StatefulWidget {
@@ -36,6 +39,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   double long = -1.0;
   File? selectedLogo;
+  File? selectedLogo2;
   List<String> selectedValue = [];
   TextEditingController addDataController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -56,7 +60,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
   }
 
   List<Data> data = []; // Ensure it's initialized with an empty list
-
+  String ?country;
   @override
   void initState() {
     // TODO: implement initState
@@ -133,6 +137,42 @@ class _AddCardScreenState extends State<AddCardScreen> {
             height: 40,
           ),
 
+          selectedLogo2==null? ElevatedButton(
+            onPressed: () async {
+              final cameras = await availableCameras();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider.value(
+                    value: context.read<
+                        HomelessCubit>(), // Use value if the cubit is already created
+                    child: CameraScreen(
+                      camera: cameras.first,
+                      onPictureTaken: (path) {
+                        // Handle the picture path (e.g., show the image, upload it, etc.)
+                       setState(() {
+                         selectedLogo2 = File(path);
+                         print(selectedLogo2);
+                       });
+
+
+                        imagePathNotifier.value = path;
+                      },
+                    ),
+                  ),
+                ),
+              );
+            },
+            child: Text(AppLocalizations.of(context)!.takePicture),
+          ):Image.file(
+            selectedLogo2!,
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(
+            height: 40,
+          ),
           BlocConsumer<AddCardCubit, AddCardState>(
             listener: (context, state) {
               if (state is CategoriesLoaded) {
@@ -140,39 +180,53 @@ class _AddCardScreenState extends State<AddCardScreen> {
               }
             },
             builder: (context, state) {
-              return CustomMultiSelectDropdownField<String>(
-                label: CacheHelper.getData(key: "lang") == "ar"
-                    ? "list of needed"
-                    : "قاثمه الاحتياجات",
-                hintText: CacheHelper.getData(key: "lang") == "ar"
-                    ? "list of needed"
-                    : "قاثمه الاحتياجات",
-                selectedValues: selectedNames,
-                // Display category names in the UI
-                items: data.isNotEmpty
-                    ? data
-                        .map((category) => category.name ?? '')
-                        .where((element) => element.isNotEmpty)
-                        .toList()
-                    : [],
-                onChanged: (selectedItems) {
-                  // Update selected names list for display
-                  selectedNames = List<String>.from(selectedItems);
-
-                  // Safely map selected names to their corresponding IDs
-                  selectedIds = selectedItems
-                      .map((selectedName) =>
-                          data
-                              .firstWhere((cat) => cat.name == selectedName)
-                              .id ??
-                          0) // Use ?? 0 to handle null cases
-                      .where((id) =>
-                          id != 0) // Ensure no default values are included
-                      .toList();
-
-                  print("Selected names: $selectedNames");
-                  print("Selected IDs: $selectedIds");
-                },
+              return Container(
+                margin: const EdgeInsets.all(4.0),
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: data.map((item) {
+                    bool isSelected = selectedIds.contains(item.id);
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isSelected) {
+                            selectedIds.remove(item.id);
+                          } else {
+                            selectedIds.add(int.parse(item.id.toString()));
+                          }
+                        });
+                        print("Selected IDs: $selectedIds");
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: isSelected ? Colors.blueAccent : Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 4,
+                              spreadRadius: 1,
+                            )
+                          ],
+                        ),
+                        child: Text(
+                          item.name.toString(),
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
               );
             },
           ),
@@ -188,16 +242,20 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
               if (permissionStatus.isGranted) {
                 // Fetch the location
-                GeolocatorResponse geoResponse =
-                    await LocationHelper.determinePosition();
-                Helper.showToast(
-                    AppLocalizations.of(context)!.pleaseWaitLocation);
+                GeolocatorResponse geoResponse = await LocationHelper.determinePosition();
+                Helper.showToast(AppLocalizations.of(context)!.pleaseWaitLocation);
 
                 if (geoResponse.isSuccess) {
                   lat = geoResponse.lat;
                   long = geoResponse.long;
-                  Helper.showToast(
-                      AppLocalizations.of(context)!.locationFetchedSucc);
+
+                  // Reverse geocoding to get country
+                  List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+                  Placemark placemark = placemarks.first; // Get the first placemark
+                  country = placemark.country ?? "Unknown country"; // Get country name
+
+                  Helper.showToast(AppLocalizations.of(context)!.locationFetchedSucc);
+                  print("Country: $country");  // Print the country
                 } else {
                   Helper.showToast(AppLocalizations.of(context)!.checkLocation);
                 }
@@ -206,26 +264,28 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 final requestStatus = await Permission.location.request();
 
                 if (requestStatus.isDenied) {
-                  Helper.showToast(
-                      AppLocalizations.of(context)!.locationPermission);
+                  Helper.showToast(AppLocalizations.of(context)!.locationPermission);
                   return;
                 }
 
                 // Once permission is granted, fetch location again
                 if (requestStatus.isGranted) {
-                  Helper.showToast(
-                      AppLocalizations.of(context)!.pleaseWaitLocation);
-                  GeolocatorResponse geoResponse =
-                      await LocationHelper.determinePosition();
+                  Helper.showToast(AppLocalizations.of(context)!.pleaseWaitLocation);
+                  dynamic geoResponse = await LocationHelper.determinePosition();
 
                   if (geoResponse.isSuccess) {
                     lat = geoResponse.lat;
                     long = geoResponse.long;
-                    Helper.showToast(
-                        AppLocalizations.of(context)!.locationFetchedSucc);
+
+                    // Reverse geocoding to get country
+                    List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+                    Placemark placemark = placemarks.first; // Get the first placemark
+                    country = placemark.country ?? "Unknown country"; // Get country name
+
+                    Helper.showToast(AppLocalizations.of(context)!.locationFetchedSucc);
+                    print("Country: $country");  // Print the country
                   } else {
-                    Helper.showToast(
-                        AppLocalizations.of(context)!.checkLocation);
+                    Helper.showToast(AppLocalizations.of(context)!.checkLocation);
                   }
                 }
               }
@@ -241,10 +301,11 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 Text(
                   AppLocalizations.of(context)!.locateMe,
                   style: const TextStyle(color: Colors.black),
-                )
+                ),
               ],
             ),
           ),
+
           const SizedBox(height: 40),
 
           CustomTextFormFieldWithLabel(
@@ -257,17 +318,17 @@ class _AddCardScreenState extends State<AddCardScreen> {
             controller: addDataController,
           ),
 
-          const SizedBox(height: 40),
-
-          CustomTextFormFieldWithLabel(
-            label: CacheHelper.getData(key: "lang") == "ar"
-                ? "Address"
-                : "العنوان",
-            hintText: CacheHelper.getData(key: "lang") == "ar"
-                ? "enter Address"
-                : " ادخل العنوان",
-            controller: addressController,
-          ),
+          // const SizedBox(height: 40),
+          //
+          // CustomTextFormFieldWithLabel(
+          //   label: CacheHelper.getData(key: "lang") == "ar"
+          //       ? "Address"
+          //       : "العنوان",
+          //   hintText: CacheHelper.getData(key: "lang") == "ar"
+          //       ? "enter Address"
+          //       : " ادخل العنوان",
+          //   controller: addressController,
+          // ),
           const SizedBox(height: 40),
           BlocConsumer<AddCardCubit, AddCardState>(
             listener: (context, state) {
@@ -292,29 +353,33 @@ class _AddCardScreenState extends State<AddCardScreen> {
                     return;
                   }
 
-                  if (selectedLogo == null) {
+                  if (selectedLogo2==null&& selectedLogo==null) {
                     Helper.showToast(AppLocalizations.of(context)!.takePicture);
                     return;
                   }
+
                   // final cardData = CardData(
                   //   imageUrl: imageUrlNotifier.value,
                   //   needs: needs,
                   //   lat: lat,
                   //   long: long,
                   // );
-                  print(selectedLogo!);
+                //  print(selectedLogo!);
+                //  print(selectedLogo2!);
                   print(lat);
                   print(long);
                   print(selectedIds);
+                  print(country);
                   print(addDataController.text.trim());
                   print(addressController.text.trim());
                   context.read<AddCardCubit>().submitForm(
-                      imagePath: selectedLogo!,
+                      imagePath: selectedLogo==null?selectedLogo2!:selectedLogo!,
                       latitude: lat,
                       longitude: long,
                       categories: selectedIds,
                       note: addDataController.text.trim(),
-                      address: addressController.text.trim());
+                      country: country.toString()
+                  );
 
                   // blocContext.read<HomelessCubit>().addPerson(cardData,
                   //     imageFileNotifier.value, imagePathNotifier.value);
