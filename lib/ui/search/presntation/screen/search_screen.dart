@@ -20,7 +20,7 @@ class SearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-      AddCardCubit()..fetchCategories('https://shelter.megatron-soft.com/api/v1'),
+      AddCardCubit()..fetchCategories('https://shelter.el-doc.com/api/v1'),
       child: AuthLayout(
         children: [
           BlocConsumer<AddCardCubit, AddCardState>(

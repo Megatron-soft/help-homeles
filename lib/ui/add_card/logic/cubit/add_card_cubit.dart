@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shelter/helper/helper.dart';
 import 'package:shelter/ui/add_card/data/model/show_all_categories.dart';
+import 'package:shelter/ui/add_card/data/model/show_category.dart';
 
 part 'add_card_state.dart';
 
@@ -35,6 +36,28 @@ class AddCardCubit extends Cubit<AddCardState> {
       }
     } catch (e) {
       emit(CategoriesError("Error: ${e.toString()}"));
+    }
+  }
+
+  Future<void> fetchCategories2(String url) async {
+    emit(Categories2Loading());
+    try {
+      Options options = Options(
+        headers: {
+          'Content-Type': '',
+          'Accept': 'application/json',
+         // "X-Localization":CacheHelper.getData(key: "lang")=="ar"?"en":"ar"
+        },
+      );
+      final response = await _dio.get('$url/local-categories',options:options );
+      if (response.statusCode == 200) {
+        final data = ShowAllCategories2.fromJson(response.data);
+        emit(Categories2Loaded(data));
+      } else {
+        emit(Categories2Error("Failed to fetch categories"));
+      }
+    } catch (e) {
+      emit(Categories2Error("Error: ${e.toString()}"));
     }
   }
 
@@ -71,7 +94,7 @@ class AddCardCubit extends Cubit<AddCardState> {
       );
 
       final response = await Dio().post(
-        'https://shelter.megatron-soft.com/api/v1/homelesses',
+        'https://shelter.el-doc.com/api/v1/homelesses',
         data: formData,
         options: options,
       );

@@ -15,6 +15,10 @@ class GetDataCubit extends Cubit<GetDataState> {
     emit(HomelessLoading());
     try {
       print('Fetching data for homeless ID: $id...');
+      print('Starting request to fetch workshops...');
+      print(
+        'https://shelter.el-doc.com/api/v1/homelesses/$id}',  // Ensure correct URL
+      );
       Options options = Options(
         headers: {
           'Content-Type': '',
@@ -22,7 +26,7 @@ class GetDataCubit extends Cubit<GetDataState> {
           "X-Localization":CacheHelper.getData(key: "lang")=="ar"?"en":"ar"
         },
       );
-      final response = await _dio.get('https://shelter.megatron-soft.com/api/v1/homelesses/$id',options: options);
+      final response = await _dio.get('https://shelter.el-doc.com/api/v1/homelesses/$id',options: options);
 
       print('Response received: ${response.statusCode}');
       print('Response data: ${response.data}');

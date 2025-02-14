@@ -35,7 +35,7 @@ class HomelessCard extends StatelessWidget {
                       image: DecorationImage(
                         image: CachedNetworkImageProvider(card.imageUrl ??
                             "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg"),
-                        fit: BoxFit.fitHeight,
+                        fit: BoxFit.fill,
                       ),
                       borderRadius: BorderRadius.circular(10).copyWith(
                         bottomLeft: Radius.zero,

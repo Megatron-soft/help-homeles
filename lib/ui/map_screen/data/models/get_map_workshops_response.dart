@@ -33,6 +33,7 @@ class Data {
   List<Categories>? categories;
   String? country;
   String? latitude;
+  String? created_at;
   String? longitude;
 
   Data(
@@ -40,12 +41,14 @@ class Data {
         this.image,
         this.categories,
         this.country,
+        this.created_at,
         this.latitude,
         this.longitude});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     image = json['image'];
+    created_at = json['created_at'];
     if (json['categories'] != null) {
       categories = <Categories>[];
       json['categories'].forEach((v) {
@@ -61,6 +64,7 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['image'] = this.image;
+    data['created_at'] = this.created_at;
     if (this.categories != null) {
       data['categories'] = this.categories!.map((v) => v.toJson()).toList();
     }

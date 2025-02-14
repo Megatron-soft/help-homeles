@@ -19,6 +19,19 @@ class CategoriesError extends AddCardState {
 
   CategoriesError(this.message);
 }
+class Categories2Loading extends AddCardState {}
+
+class Categories2Loaded extends AddCardState {
+  final ShowAllCategories2 categories;
+
+  Categories2Loaded(this.categories);
+}
+
+class Categories2Error extends AddCardState {
+  final String message;
+
+  Categories2Error(this.message);
+}
 
 class AddCardLoading extends AddCardState {}
 

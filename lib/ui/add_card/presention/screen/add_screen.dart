@@ -14,6 +14,7 @@ import 'package:shelter/models/response.dart';
 import 'package:shelter/repository/location_helper.dart';
 import 'package:shelter/ui/add_card/data/model/show_all_categories.dart';
 import 'package:shelter/ui/add_card/logic/cubit/add_card_cubit.dart';
+import 'package:shelter/ui/add_card/presention/widget/loading_widget.dart';
 import 'package:shelter/ui/bloc/homeless_bloc.dart';
 import 'package:shelter/ui/bloc/language_bloc.dart';
 import 'package:shelter/ui/bloc/needs_bloc.dart';
@@ -61,10 +62,19 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   List<Data> data = []; // Ensure it's initialized with an empty list
   String ?country;
+  void deleteImage() {
+    setState(() {
+      selectedLogo = null;
+    });
+  }  void deleteImage1() {
+    setState(() {
+      selectedLogo2 = null;
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
-    AddCardCubit().fetchCategories('https://shelter.megatron-soft.com/api/v1');
+    AddCardCubit().fetchCategories('https://shelter.el-doc.com/api/v1');
     print(CacheHelper.getData(key: "lang"));
     print(CacheHelper.getData(key: "lang"));
     print(CacheHelper.getData(key: "lang"));
@@ -76,7 +86,17 @@ class _AddCardScreenState extends State<AddCardScreen> {
     CacheHelper.getData(key: "lang");
     super.initState();
   }
-
+  Future<String?> getCountry(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      if (placemarks.isNotEmpty) {
+        return placemarks.first.country;
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     final ValueNotifier<File?> imageFileNotifier = ValueNotifier(null);
@@ -85,7 +105,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
     return BlocProvider(
       create: (context) =>
-          AddCardCubit()..fetchCategories('https://shelter.megatron-soft.com/api/v1'),
+          AddCardCubit()..fetchCategories('https://shelter.el-doc.com/api/v1'),
       child: AuthLayout(
         children: [
           // Padding(
@@ -107,37 +127,50 @@ class _AddCardScreenState extends State<AddCardScreen> {
             onTap: () async {
               await _pickImage();
             },
-            child: selectedLogo == null
-                ? Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          "lib/res/upload.svg",
-                          width: 80,
-                          height: 40,
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          AppLocalizations.of(context)!.pickImage,
-                        ),
-                      ],
+            child:selectedLogo2==null? GestureDetector(
+              onTap: _pickImage,
+              child: selectedLogo == null
+                  ? Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      "lib/res/upload.svg",
+                      width: 80,
+                      height: 40,
                     ),
-                  )
-                : Image.file(
+                    const SizedBox(height: 5),
+                    Text(AppLocalizations.of(context)!.pickImage),
+                  ],
+                ),
+              )
+                  : Stack(
+                children: [
+                  Image.file(
                     selectedLogo!,
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
+                    // width: double.infinity,
+                    // height: 200,
                   ),
+                  Positioned(
+                    top: 5,
+                    right: 5,
+                    child: IconButton(
+                      onPressed: deleteImage,
+                      icon: const Icon(Icons.delete, color: Colors.red,size: 40,),
+                    ),
+                  ),
+                ],
+              ),
+            ):SizedBox.shrink(),
           ),
 
           const SizedBox(
             height: 40,
           ),
 
-          selectedLogo2==null? ElevatedButton(
+          selectedLogo==null?    selectedLogo2==null? ElevatedButton(
             onPressed: () async {
               final cameras = await availableCameras();
               Navigator.push(
@@ -154,8 +187,6 @@ class _AddCardScreenState extends State<AddCardScreen> {
                          selectedLogo2 = File(path);
                          print(selectedLogo2);
                        });
-
-
                         imagePathNotifier.value = path;
                       },
                     ),
@@ -164,12 +195,24 @@ class _AddCardScreenState extends State<AddCardScreen> {
               );
             },
             child: Text(AppLocalizations.of(context)!.takePicture),
-          ):Image.file(
-            selectedLogo2!,
-            width: 100,
-            height: 100,
-            fit: BoxFit.cover,
-          ),
+          ) :Stack(
+            children: [
+              Image.file(
+                selectedLogo2!,
+                fit: BoxFit.fill,
+                // width: double.infinity,
+                // height: 200,
+              ),
+              Positioned(
+                top: 5,
+                right: 5,
+                child: IconButton(
+                  onPressed: deleteImage1,
+                  icon: const Icon(Icons.delete, color: Colors.red,size: 40,),
+                ),
+              ),
+            ],
+          ):SizedBox.shrink(),
           const SizedBox(
             height: 40,
           ),
@@ -250,9 +293,12 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   long = geoResponse.long;
 
                   // Reverse geocoding to get country
-                  List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
-                  Placemark placemark = placemarks.first; // Get the first placemark
-                  country = placemark.country ?? "Unknown country"; // Get country name
+                  // dynamic   lat1 = -37.8136;
+                  // dynamic long2 = 144.9631;
+                  // double late = 40.7128;
+                  // double lone = -74.0060;
+
+                   country = await getCountry(lat, long); // Get country name
 
                   Helper.showToast(AppLocalizations.of(context)!.locationFetchedSucc);
                   print("Country: $country");  // Print the country
@@ -278,10 +324,12 @@ class _AddCardScreenState extends State<AddCardScreen> {
                     long = geoResponse.long;
 
                     // Reverse geocoding to get country
-                    List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
-                    Placemark placemark = placemarks.first; // Get the first placemark
-                    country = placemark.country ?? "Unknown country"; // Get country name
+                    // dynamic   lat1 = -37.8136;
+                    // dynamic long2 = 144.9631;
+                    // double late = 40.7128;
+                    // double lone = -74.0060;
 
+                    country = await getCountry(lat, long);
                     Helper.showToast(AppLocalizations.of(context)!.locationFetchedSucc);
                     print("Country: $country");  // Print the country
                   } else {
@@ -313,8 +361,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 ? "Other Data"
                 : "اضافه بيانات اخري",
             hintText: CacheHelper.getData(key: "lang") == "ar"
-                ? " Enter Other Data"
-                : "اضافه بيانات اخري",
+                ? "Notes"
+                : "ملاحظات",
             controller: addDataController,
           ),
 
@@ -336,12 +384,18 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 Helper.showToast(AppLocalizations.of(context)!.enterAllData);
               }
               if (state is AddCardSuccess) {
+                Navigator.pop(context);
                 Helper.showToast(CacheHelper.getData(key: "lang") == "ar"
                         ? "The data has been added successfully wait until it is approved"
                         : "تم اضافه البيانات بنجاج انتظر حتي يم الموافقه عليها")
                     ;
                 Navigator.pop(context);
               }
+              if(state is AddCardLoading)
+                {
+                  showLoadingDialog(context);
+
+                }
               // TODO: implement listener
             },
             builder: (context, state) {
@@ -391,6 +445,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
               );
             },
           ),
+          const SizedBox(height: 40),
           // ElevatedButton(
           //   onPressed: () {
           //     if (lat == -1.0) {

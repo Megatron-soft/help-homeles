@@ -76,6 +76,9 @@ class MapCubit extends Cubit<MapState> {
     emit(MapLoading());  // Emit loading state
     try {
       print('Starting request to fetch workshops...');
+      print(
+        'https://shelter.el-doc.com/api/v1/filter/homelesses? latitude=${latitude},longitude= ${longitude},radius= ${radius}, country=${country}, categories= ${categories}',  // Ensure correct URL
+      );
       Options options = Options(
         headers: {
           'Content-Type': '',
@@ -84,7 +87,7 @@ class MapCubit extends Cubit<MapState> {
         },
       );
       final response = await _dio.get(
-        'https://shelter.megatron-soft.com/api/v1/filter/homelesses',  // Ensure correct URL
+        'https://shelter.el-doc.com/api/v1/filter/homelesses',  // Ensure correct URL
         queryParameters: {
 
 
@@ -99,7 +102,7 @@ class MapCubit extends Cubit<MapState> {
         options: options,
       );
 print(
-  'https://shelter.megatron-soft.com/api/v1/filter/homelesses? latitude=${latitude},longitude= ${longitude},radius= ${radius}, country=${country}, categories= ${categories}',  // Ensure correct URL
+  'https://shelter.el-doc.com/api/v1/filter/homelesses? latitude=${latitude},longitude= ${longitude},radius= ${radius}, country=${country}, categories= ${categories}',  // Ensure correct URL
 );
       print('Response received: ${response.statusCode}');
       print('Response data: ${response.data}');
